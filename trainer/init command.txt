@@ -15,5 +15,6 @@ gcloud ml-engine jobs submit training ${JOB_NAME} \
 	--package-path ${PACKAGE_PATH} \
 	--region ${REGION} \
 	--config=${CLOUD_CONFIG} \
+	-- \
 	--train-file ${TRAIN_FILE} \
 	--job-name ${JOB_NAME}
