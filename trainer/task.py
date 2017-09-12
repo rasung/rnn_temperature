@@ -130,7 +130,7 @@ if __name__ == '__main__':
         key, value = tf.TextLineReader().read(filename_queue)
 
         input_list = []
-        for l in range(input_sequence_length + 1 + 1):
+        for l in range(input_sequence_length + output_sequence_length):
             input_list.append([1])
 
         data = tf.decode_csv(value, record_defaults=input_list)
