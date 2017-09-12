@@ -18,3 +18,5 @@ gcloud ml-engine jobs submit training ${JOB_NAME} \
 	-- \
 	--train-file ${TRAIN_FILE} \
 	--job-name ${JOB_NAME}
+
+	
