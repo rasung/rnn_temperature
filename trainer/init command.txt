@@ -1,0 +1,19 @@
+export JOB_NAME="1m_1m_max_19970101_20170831"
+export BUCKET_NAME=rnn_stock
+export CLOUD_CONFIG=trainer/config.yaml
+export JOB_DIR=gs://${BUCKET_NAME}/model/${JOB_NAME}
+export MODULE=trainer.task
+export PACKAGE_PATH=./trainer
+export REGION=asia-east1
+export RUNTIME=0.1
+export TRAIN_FILE=gs://${BUCKET_NAME}/data/1month_1month_19970101_20170831.csv
+
+gcloud ml-engine jobs submit training ${JOB_NAME} \
+	--job-dir ${JOB_DIR} \
+	--runtime-version ${RUNTIME} \
+	--module-name ${MODULE} \
+	--package-path ${PACKAGE_PATH} \
+	--region ${REGION} \
+	--config=${CLOUD_CONFIG} \
+	--train-file ${TRAIN_FILE} \
+	--job-name ${JOB_NAME}
