@@ -1,12 +1,13 @@
-export JOB_NAME="temperature_1"
+export JOB_NAME="temperature_2"
 export BUCKET_NAME=rnn_temperature
 export CLOUD_CONFIG=trainer/config.yaml
 export JOB_DIR=gs://${BUCKET_NAME}/model/${JOB_NAME}
 export MODULE=trainer.task
 export PACKAGE_PATH=./trainer
-export REGION=asia-northeast1
-export RUNTIME=0.1
+export REGION=asia-east1
+export RUNTIME=1.2
 export TRAIN_FILE=gs://${BUCKET_NAME}/data/data.csv
+export LOG_DIR=gs://${BUCKET_NAME}/log/
 
 gcloud ml-engine jobs submit training ${JOB_NAME} \
 	--job-dir ${JOB_DIR} \
@@ -15,8 +16,9 @@ gcloud ml-engine jobs submit training ${JOB_NAME} \
 	--package-path ${PACKAGE_PATH} \
 	--region ${REGION} \
 	--config=${CLOUD_CONFIG} \
+	--log-dir
 	-- \
 	--train-file ${TRAIN_FILE} \
 	--job-name ${JOB_NAME}
+	--log-dir ${LOG_DIR}
 
-	
