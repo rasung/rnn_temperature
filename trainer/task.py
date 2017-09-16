@@ -51,11 +51,11 @@ if __name__ == '__main__':
 
     with tf.name_scope("placeholder") as scope:
 
-        X = tf.placeholder(tf.int32, [None, input_sequence_length], name="x_input")
+        X = tf.placeholder(tf.float32, [None, input_sequence_length], name="x_input")
         #X_one_hot = tf.one_hot(X, input_num_classes)
         #print("X_one_hot", X_one_hot)  # check out the shape
 
-        Y = tf.placeholder(tf.int32, [None, output_sequence_length], name="y_input")  # 1
+        Y = tf.placeholder(tf.float32, [None, output_sequence_length], name="y_input")  # 1
         Y_one_hot = tf.one_hot(Y, output_num_classes)  # one hot
         print("Y_one_hot", Y_one_hot)
         Y_one_hot = tf.reshape(Y_one_hot, [-1, output_num_classes])
@@ -96,7 +96,7 @@ if __name__ == '__main__':
         # Cross entropy cost/loss
         cost_i = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y_one_hot)
         cost = tf.reduce_mean(cost_i)
-        
+
         cost_summ = tf.summary.scalar('cost', cost)
 
 
