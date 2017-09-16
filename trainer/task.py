@@ -41,18 +41,19 @@ if __name__ == '__main__':
     batch_size = 1
     input_sequence_length = 10  
     output_sequence_length = 1
-    input_num_classes = 15
+    input_num_classes = 10
     output_num_classes = 2
     stack = 2
     softmax_count = 1
-    softmax_hidden_size = input_sequence_length
+    softmax_hidden_size = 5
+    learning_rate = 0.1
     
 
     with tf.name_scope("placeholder") as scope:
 
         X = tf.placeholder(tf.int32, [None, input_sequence_length], name="x_input")
-        X_one_hot = tf.one_hot(X, input_num_classes)
-        print("X_one_hot", X_one_hot)  # check out the shape
+        #X_one_hot = tf.one_hot(X, input_num_classes)
+        #print("X_one_hot", X_one_hot)  # check out the shape
 
         Y = tf.placeholder(tf.int32, [None, output_sequence_length], name="y_input")  # 1
         Y_one_hot = tf.one_hot(Y, output_num_classes)  # one hot
@@ -60,25 +61,12 @@ if __name__ == '__main__':
         Y_one_hot = tf.reshape(Y_one_hot, [-1, output_num_classes])
         print("Y_reshape", Y_one_hot)
 
-
-    with tf.name_scope("rnn") as scope:
-
-        # Make a lstm cell with hidden_size (each unit output vector size)
-        def lstm_cell():
-            cell = rnn.BasicLSTMCell(hidden_size, state_is_tuple=True)
-            return cell
-
-        multi_cells = rnn.MultiRNNCell([lstm_cell() for _ in range(stack)], state_is_tuple=True)
-
-        # outputs: unfolding size x hidden size, state = hidden size
-        outputs, _states = tf.nn.dynamic_rnn(multi_cells, X_one_hot, dtype=tf.float32)
-        # reshape out
-        outputs = tf.reshape(outputs, [batch_size, hidden_size * input_sequence_length])
+        outputs = tf.reshape(X, [batch_size, input_sequence_length])
 
 
     with tf.name_scope("softmax_Layer_1") as scope:
 
-        W1 = tf.Variable(tf.random_normal([hidden_size * input_sequence_length, softmax_hidden_size]), name='weight1')
+        W1 = tf.Variable(tf.random_normal([input_sequence_length, softmax_hidden_size]), name='weight1')
         b1 = tf.Variable(tf.random_normal([softmax_hidden_size]), name='bias1')
 
         w1_hist = tf.summary.histogram("weights1", W1)
@@ -108,6 +96,7 @@ if __name__ == '__main__':
         # Cross entropy cost/loss
         cost_i = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=Y_one_hot)
         cost = tf.reduce_mean(cost_i)
+        
         cost_summ = tf.summary.scalar('cost', cost)
 
 
@@ -121,7 +110,7 @@ if __name__ == '__main__':
 
     with tf.name_scope("train") as scope:
     
-        optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.1).minimize(cost)
+        optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).minimize(cost)
 
 
     with tf.name_scope("get_input_data") as scope:
