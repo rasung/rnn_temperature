@@ -1,4 +1,4 @@
-export JOB_NAME="temperature_4"
+export JOB_NAME="temperature_5"
 export BUCKET_NAME=rnn_temperature
 export CLOUD_CONFIG=trainer/config.yaml
 export JOB_DIR=gs://${BUCKET_NAME}/model/${JOB_NAME}
